@@ -54,6 +54,12 @@ To use the script, run the command:
 
 Where input_file is the CBZ or CBR file to be processed and compression_percentage is an optional value indicating the compression level (0-100, default 50%).
 
+To use batch script, run the command:
+
+`python3 cbz_resizer_batch.py input_file [max_width]`
+
+Where input_file is same, max_width is maximum widht of resized image in pixels (default: 720px)
+
 ## Sample Files for Testing
 If you need sample CBZ or CBR files to test the CBZ Resizer script, you can download pre-built files from the following link: https://github.com/clach04/sample_reading_media/releases/. These files can be useful for testing the resizing and conversion functionalities of the script without the need to use large files
 
