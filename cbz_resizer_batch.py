@@ -133,17 +133,16 @@ def print_size_info(
     print("-" * 70)
 
 
-COMPRESSION = 66
-CBZ = ".cbz"
-ORIG = ".orig"
-RESIZED = ".rsz"
-
-
 def main():
     """Funzione principale che gestisce l'input dell'utente e avvia il processo di compressione."""
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print("Usage: python3 comic_resizer.py input_dir [compression_percentage]")
         sys.exit(1)
+
+    COMPRESSION = 66
+    CBZ = ".cbz"
+    ORIG = ".orig"
+    RESIZED = ".rsz"
 
     input_dir = Path(sys.argv[1])
 
