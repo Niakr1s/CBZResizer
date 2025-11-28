@@ -56,9 +56,9 @@ Where input_file is the CBZ or CBR file to be processed and compression_percenta
 
 To use batch script, run the command:
 
-`python3 cbz_resizer_batch.py input_file [max_width]`
+`python3 cbz_resizer_batch.py input_file [max_dimension]`
 
-Where input_file is same, max_width is maximum widht of resized image in pixels (default: 720px)
+Where max_dimension is maximum dimension of it's minimum side (default: 720px). It means that if the image is vertical - it's width will be less or equal max dimension, if horizontal - it's height will be.
 
 ## Sample Files for Testing
 If you need sample CBZ or CBR files to test the CBZ Resizer script, you can download pre-built files from the following link: https://github.com/clach04/sample_reading_media/releases/. These files can be useful for testing the resizing and conversion functionalities of the script without the need to use large files

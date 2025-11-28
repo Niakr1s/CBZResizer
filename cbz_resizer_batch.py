@@ -34,13 +34,13 @@ def update_progress_bar(total_images, processed_images):
     sys.stdout.flush()
 
 
-def compress_image(image_path, max_width):
+def compress_image(image_path, max_dimension):
     """Comprime un'immagine ridimensionandola in base al fattore specificato."""
     with Image.open(image_path) as image:
         original_width, original_height = image.size
-        if max_width < original_width:
-            # resizing
-            resize_factor = max_width / original_width
+        resize_factor = max_dimension / min(original_width, original_height)
+
+        if resize_factor < 1:
             new_width = int(original_width * resize_factor)
             new_height = int(original_height * resize_factor)
             resized_image = image.resize((new_width, new_height))
@@ -64,7 +64,7 @@ def extract_comic_book(input_file, temp_folder):
         raise ValueError("Formato file non supportato.")
 
 
-def compress_comic_book(input_file, output_file, max_width):
+def compress_comic_book(input_file, output_file, max_dimension):
     """Comprime un file di fumetti (CBZ o CBR) ridimensionando le immagini al suo interno e crea un nuovo CBZ."""
     temp_folder = Path("temp_folder")
     temp_folder.mkdir(exist_ok=True)
@@ -87,7 +87,7 @@ def compress_comic_book(input_file, output_file, max_width):
 
     for image_path in images:
         original_width, original_height, new_width, new_height = compress_image(
-            image_path, max_width
+            image_path, max_dimension
         )
         last_original_width, last_original_height = original_width, original_height
         last_new_width, last_new_height = new_width, new_height
@@ -109,7 +109,7 @@ def compress_comic_book(input_file, output_file, max_width):
         last_original_height,
         last_new_width,
         last_new_height,
-        max_width,
+        max_dimension,
     )
 
     print(f"Removing to trash: {input_file}")
@@ -148,7 +148,7 @@ def main():
         print("Usage: python3 comic_resizer.py input_dir [compression_percentage]")
         sys.exit(1)
 
-    MAX_WIDTH = 720
+    MAX_DIMENSION = 720
     CBZ = ".cbz"
     RESIZED = ".rsz"
 
@@ -156,7 +156,7 @@ def main():
 
     if len(sys.argv) == 3:
         try:
-            MAX_WIDTH = int(sys.argv[2])
+            MAX_DIMENSION = int(sys.argv[2])
         except ValueError:
             sys.exit(1)
 
@@ -167,7 +167,7 @@ def main():
 
         output_file = input_file.with_name(f"{input_file.stem}{RESIZED}{CBZ}")
         print(f"Compressing: {input_file}")
-        compress_comic_book(input_file, output_file, MAX_WIDTH)
+        compress_comic_book(input_file, output_file, MAX_DIMENSION)
 
 
 if __name__ == "__main__":
