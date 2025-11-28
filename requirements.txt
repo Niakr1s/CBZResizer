@@ -1,2 +1,3 @@
 Pillow
 rarfile
+Send2Trash

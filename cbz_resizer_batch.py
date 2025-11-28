@@ -6,6 +6,7 @@ from pathlib import Path
 
 import rarfile
 from PIL import Image
+from send2trash import send2trash
 
 
 def remove_temp_folder(temp_folder):
@@ -111,6 +112,9 @@ def compress_comic_book(input_file, output_file, max_width):
         max_width,
     )
 
+    print(f"Removing to trash: {input_file}")
+    send2trash(os.path.normpath(input_file))
+
 
 def print_size_info(
     input_file,
@@ -146,7 +150,6 @@ def main():
 
     MAX_WIDTH = 720
     CBZ = ".cbz"
-    ORIG = ".orig"
     RESIZED = ".rsz"
 
     input_dir = Path(sys.argv[1])
@@ -158,25 +161,11 @@ def main():
             sys.exit(1)
 
     for input_file in input_dir.rglob(f"*{CBZ}"):
-        if len(input_file.suffixes) == 1 or input_file.suffixes[-2] not in (
-            ORIG,
-            RESIZED,
-        ):
-            # Here we have intitial cbz archive with name "manga.cbz", we need to rename it to "manga.orig.cbz"
-            old_input_file = input_file
-            input_file = old_input_file.parent / Path(
-                f"{old_input_file.stem}{ORIG}{CBZ}"
-            )
-            print(f"Moving: {old_input_file} to {input_file}")
-            shutil.move(old_input_file, input_file)
-        suffix = input_file.suffixes[-2]
-        if suffix == RESIZED:
+        if len(input_file.suffixes) > 1 and input_file.suffixes[-2] == RESIZED:
             print(f"Skipping: {input_file}")
             continue
 
-        output_file = input_file.with_name(
-            f"{Path(input_file.stem).stem}{RESIZED}{CBZ}"
-        )
+        output_file = input_file.with_name(f"{input_file.stem}{RESIZED}{CBZ}")
         print(f"Compressing: {input_file}")
         compress_comic_book(input_file, output_file, MAX_WIDTH)
 
